@@ -1,0 +1,89 @@
+[
+  {
+    "title": "عنا",
+    "navLinks": [
+      {
+        "name": "معلومات عنا",
+        "path": "/about"
+      },
+      {
+        "name": "التصنيفات",
+        "path": "/categories"
+      },
+      {
+        "name": "تسوق",
+        "path": "/shop"
+      },
+      {
+        "name": "مدونه",
+        "path": "/blog"
+      },
+      {
+        "name": "التعليمات",
+        "path": "/faq"
+      },
+      {
+        "name": "الاتصالات",
+        "path": "/contact"
+      }
+    ]
+  },
+  {
+    "title": "التصنيفات",
+    "navLinks": [
+      {
+        "name": "ماكياج",
+        "path": "/categories"
+      },
+      {
+        "name": "منتجع صحي",
+        "path": "/categories"
+      },
+      {
+        "name": "عطر",
+        "path": "/categories"
+      },
+      {
+        "name": "الأظافر",
+        "path": "/categories"
+      },
+      {
+        "name": "العناية بالبشرة",
+        "path": "/categories"
+      },
+      {
+        "name": "العناية بالشعر",
+        "path": "/categories"
+      }
+    ]
+  },
+  {
+    "title": "روابط مفيدة",
+    "navLinks": [
+      {
+        "name": "وظائف",
+        "path": "/about"
+      },
+      {
+        "name": "سياسة الخصوصية",
+        "path": "/faq"
+      },
+      {
+        "name": "شروط الاستخدام",
+        "path": "/about"
+      },
+      {
+        "name": "الدعم",
+        "path": "/blog"
+      },
+      {
+        "name": "تفاصيل الشحن",
+        "path": "/about"
+      },
+      {
+        "name": "معلومات",
+        "path": "/about"
+      }
+    ]
+  }
+]
