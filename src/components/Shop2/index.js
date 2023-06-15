@@ -14,61 +14,87 @@ import { USER_ID } from "configs/AppConfig";
 // React Range
 const { createSliderWithTooltip } = Slider;
 const Range = createSliderWithTooltip(Slider.Range);
+
 const options = [
   { value: "highToMin", label: "من باهظ الثمن إلى رخيص" },
   { value: "minToHigh", label: "من الرخيص إلى باهظ الثمن" },
 ];
-export const Shop = () => {
-  const [products, setProducts] = useState([]);
+export const Shop2 = ({categorproducts,id}) => {
+  //console.log(id)
 
-  //const allProducts = [...productData];
 
-  // const [productOrder, setProductOrder] = useState(
-  //   products.sort((a, b) => (a.price < b.price ? 1 : -1))
-  // );
+  const [categoryproducts,setcategoryproducts]=useState([]);
+  const [categoryproductsorigin,setcategoryproductsorigin]=useState([]);
 
-  const [productsorigin, setoriginproducts] = useState([]);
-  const [filter, setFilter] = useState({ isNew: false, isSale: true });
+  const loginMutation = useMutation({
+    mutationFn: (body) => select_products_fn(body),
+    onSuccess: (res) => {
+      //console.log(res.data)
+      //alert(res.data);
+      setcategoryproducts(res.data.message);
+      setcategoryproductsorigin(res.data.message);
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+
+  const gethomedata = () => {
+    let userData=JSON.parse(localStorage.getItem(USER_ID))
+
+    loginMutation.mutate({
+      category_id:id,
+      user_id: userData?.user_id||0,
+      start: 0,
+    });
+  };
+  useEffect(()=>{
+    gethomedata()
+  },[])
+
+  // const allProducts = [...productData];
+  const allProducts = [];
   const [searchTxt, setSearchTxt] = useState('');
-  const [categoryid,setcategoryid]=useState(null);
 
+  const [productOrder, setProductOrder] = useState(
+    categoryproducts.sort((a, b) => (a.price < b.price ? 1 : -1))
+  );
 
-  // useEffect(() => {
-  //   setProducts(productOrder);
-  // }, [productOrder]);
+  const [products, setProducts] = useState([]);
+  const [filter, setFilter] = useState({ isNew: false, isSale: true });
 
-  // useEffect(() => {
-  //   if (filter.isNew && filter.isSale) {
-  //     const newPro = productOrder.filter(
-  //       (pd) => pd.isNew === true && pd.isSale === true
-  //     );
-  //     setProducts(newPro);
-  //   } else if (filter.isNew && !filter.isSale) {
-  //     const newPro = productOrder.filter((pd) => pd.isNew === true);
-  //     setProducts(newPro);
-  //   } else if (filter.isSale && !filter.isNew) {
-  //     const newPro = productOrder.filter((pd) => pd.isSale === true);
-  //     setProducts(newPro);
-  //   } else {
-  //     //setProducts([...productOrder]);
-  //   }
-  // }, [filter, productOrder]);
-  const recentlyViewed = [...products].slice(0, 3);
-  const todaysTop = [...products].slice(3, 6);
-  const paginate = usePagination(products, 9);
+  useEffect(() => {
+    setProducts(productOrder);
+  }, [productOrder]);
+
+  useEffect(() => {
+    if (filter.isNew && filter.isSale) {
+      const newPro = productOrder.filter(
+        (pd) => pd.isNew === true && pd.isSale === true
+      );
+      setProducts(newPro);
+    } else if (filter.isNew && !filter.isSale) {
+      const newPro = productOrder.filter((pd) => pd.isNew === true);
+      setProducts(newPro);
+    } else if (filter.isSale && !filter.isNew) {
+      const newPro = productOrder.filter((pd) => pd.isSale === true);
+      setProducts(newPro);
+    } else {
+      setProducts([...productOrder]);
+    }
+  }, [filter, productOrder]);
+  const recentlyViewed = [...productData].slice(0, 3);
+  const todaysTop = [...productData].slice(3, 6);
+  const paginate = usePagination(categoryproducts, 6);
 
   const handleSort = (value) => {
     if (value === "highToMin") {
-      const newOrder = products.sort((a, b) => (a.price < b.price ? 1 : -1));
+      const newOrder = allProducts.sort((a, b) => (a.price < b.price ? 1 : -1));
       setProductOrder(newOrder);
-      setoriginproducts(newOrder);
-      setProducts(newOrder)
     }
     if (value === "minToHigh") {
-      const newOrder = products.sort((a, b) => (a.price > b.price ? 1 : -1));
+      const newOrder = allProducts.sort((a, b) => (a.price > b.price ? 1 : -1));
       setProductOrder(newOrder);
-      setoriginproducts(newOrder);
-      setProducts(newOrder)
     }
   };
 
@@ -88,9 +114,7 @@ export const Shop = () => {
   const selectProducts = useMutation({
     mutationFn: (body) => select_products_fn(body),
     onSuccess: (res) => {
-      //console.log(res.data)
       setProducts(res.data?.message);
-      setoriginproducts(res.data?.message);
     },
     onError: (err) => {
       console.log(err);
@@ -98,34 +122,13 @@ export const Shop = () => {
   });
   useEffect(() => {
     let userData=JSON.parse(localStorage.getItem(USER_ID))
+
     selectProducts.mutate({
-      user_id: userData?.user_id||0,
+      user_id:userData?.user_id||0,
       start: 0,
       category_id: "all",
     });
   }, []);
-
-
-  function searchType(e) {
-    setSearchTxt(e);
-    const formattedQuery = e.toLowerCase();
-    const filteredData = lodash.filter(productsorigin, item => {
-      return contains(item, formattedQuery);
-    });
-    setProducts(filteredData);
-  }
-  const contains = (items, query) => {
-    const { name,category} = items;
-    if (
-      name?.toLowerCase().includes(query)||
-      category?.toLowerCase().includes(query)
-    ) {
-      return true;
-    }
-
-    return false;
-  };
-
 
   const [watched, setwatched] = useState([]);
   const [mostvisited, setmostvisited] = useState([]);
@@ -148,12 +151,33 @@ export const Shop = () => {
 
     watchmutation.mutate({
       user_id:userData?.user_id||0,
-
     });
   };
   useEffect(()=>{
     getwatched()
   },[])
+
+
+  function searchType(e) {
+    setSearchTxt(e);
+    const formattedQuery = e.toLowerCase();
+    const filteredData = lodash.filter(categoryproductsorigin, item => {
+      return contains(item, formattedQuery);
+    });
+    setcategoryproducts(filteredData);
+  }
+  const contains = (items, query) => {
+    const { name,category} = items;
+    if (
+      name?.toLowerCase().includes(query)||
+      category?.toLowerCase().includes(query)
+    ) {
+      return true;
+    }
+
+    return false;
+  };
+
 
   return (
     <div>
@@ -164,8 +188,8 @@ export const Shop = () => {
             {/* <!-- Shop Main --> */}
             <div className="shop-main">
               <div className="shop-main__filter">
-                {/* <div className="shop-main__checkboxes">
-                  <label className="checkbox-box">
+                <div className="shop-main__checkboxes">
+                  {/* <label className="checkbox-box">
                     <input
                       checked={filter.isSale}
                       onChange={() =>
@@ -186,15 +210,15 @@ export const Shop = () => {
                     />
                     <span className="checkmark"></span>
                     جديد
-                  </label>
-                </div> */}
+                  </label> */}
+                </div>
                 <div className="shop-main__select">
-                  {/* <Dropdown
+                  <Dropdown
                     options={options}
                     className="react-dropdown"
                     onChange={(option) => handleSort(option.value)}
                     value={options[0]}
-                  /> */}
+                  />
                 </div>
               </div>
               <div className="shop-main__items">
@@ -217,7 +241,7 @@ export const Shop = () => {
                 />
                 <i className="icon-search"></i>
               </div>
-              <div className="shop-aside__item">
+              {/* <div className="shop-aside__item">
                 <span
                   className="shop-aside__item-title"
                   style={{ textAlign: "end" }}
@@ -226,40 +250,14 @@ export const Shop = () => {
                 </span>
                 <ul>
                   {categories?.data?.message.map((item, idex) => (
-                    <li style={{
-                      direction:'rtl'
-                    }}>
-                      <a
-
-                        className={`${categoryid==item.categoryId?'active':''}`}
-                        onClick={()=>{
-                          searchType(item.name)
-                          setcategoryid(item.categoryId)
-                        }}
-                        style={{
-                          display:'flex',
-                          alignItems:'center',
-                          justifyContent:'start',
-                          backgroundColor:categoryid==item.categoryId?'#068C45':'',
-                          color:categoryid==item.categoryId?'white':'',
-                          cursor:'pointer'
-                        }}
-                      >
-                        <span
-                          style={{
-                          color:categoryid==item.categoryId?'white':'',
-                          }}
-                        >{item.name}</span> <span
-                          style={{
-                          color:categoryid==item.categoryId?'white':'',
-
-                          }}
-                        >({item.product_count})</span>
+                    <li>
+                      <a href="#">
+                        {item.name} <span>(37)</span>
                       </a>
                     </li>
                   ))}
                 </ul>
-              </div>
+              </div> */}
               {/* <div className="shop-aside__item">
                 <span
                   className="shop-aside__item-title"
@@ -288,22 +286,18 @@ export const Shop = () => {
                 >
                   لقد شاهدت
                 </span>
-                {watched?.map((data) => (
+                {watched.map((data) => (
                   <AsideItem key={data.id} aside={data} />
                 ))}
               </div>
-              <div
-                style={{
-                  direction:'rtl'
-                }}
-              className="shop-aside__item">
+              <div className="shop-aside__item">
                 <span
                   className="shop-aside__item-title"
                   style={{ textAlign: "end" }}
                 >
                   أعلى 3 لهذا اليوم
                 </span>
-                {mostvisited?.map((data) => (
+                {mostvisited.map((data) => (
                   <AsideItem key={data.id} aside={data} />
                 ))}
               </div>

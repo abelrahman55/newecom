@@ -2,10 +2,11 @@ import { PromoVideo } from 'components/shared/PromoVideo/PromoVideo';
 import { useState } from 'react';
 import Link from 'next/link';
 
-export const Info = () => {
+export const Info = ({aboutdata}) => {
+  //console.log(aboutdata)
   const [play, setPlay] = useState(false);
   const url = play
-    ? 'https://www.youtube.com/embed/K1yp7Q1hH1c?autoplay=1'
+    ?`${aboutdata.promotion_video}`/*  'https://www.youtube.com/embed/K1yp7Q1hH1c?autoplay=1' */
     : '';
   return (
     <>
@@ -55,22 +56,20 @@ export const Info = () => {
                 videoUrl={url}
                 play={play}
                 onVideoPlay={() => setPlay(true)}
-                image='/assets/img/info-item-img2.jpg'
+                //image='/assets/img/info-item-img2.jpg'
               />
             </div>
             <div className='info-blocks__item-text'>
               <span className='saint-text'>معلومات عنا</span>
               <h2>من نحن</h2>
-              <span className='info-blocks__item-descr'>
-                Nourish your skin with toxin-free cosmetic products. With the
-                offers that you can’t refuse.
-              </span>
+
               <p>
-                Non aliqua reprehenderit reprehenderit culpa laboris nulla minim
+                {aboutdata?.about_us}
+                {/* Non aliqua reprehenderit reprehenderit culpa laboris nulla minim
                 anim velit adipisicing ea aliqua alluptate sit do do.Non aliqua
                 reprehenderit reprehenderit culpa laboris nulla minim anim velit
                 adipisicing ea aliqua alluptate sit do do.Non aliqua
-                reprehenderit reprehenderit culpa laboris nulla minim.
+                reprehenderit reprehenderit culpa laboris nulla minim. */}
               </p>
               <Link href='/about'>
                 <a className='info-blocks__item-link'>

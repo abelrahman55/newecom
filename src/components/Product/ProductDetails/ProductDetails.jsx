@@ -6,9 +6,64 @@ import { Reviews } from "../Reviews/Reviews";
 import { ReviewFrom } from "../ReviewForm/ReviewFrom";
 import { useRouter } from "next/router";
 import { CartContext } from "pages/_app";
-
+import { useMutation } from "react-query";
+import { get_product_details } from "configs/APIs";
+import {
+  SlickArrowPrev,
+  SlickArrowNext,
+} from 'components/utils/SlickArrows/SlickArrows';
+import { USER_ID } from "configs/AppConfig";
 export const ProductDetails = () => {
+
+
+  // const settings = {
+  //   dots: false,
+  //   infinite: false,
+  //   arrows: true,
+  //   speed: 300,
+  //   slidesToShow: 4,
+  //   slidesToScroll: 1,
+  //   prevArrow: <SlickArrowPrev />,
+  //   nextArrow: <SlickArrowNext />,
+  //   lazyLoad: 'progressive',
+  //   responsive: [
+  //     {
+  //       breakpoint: 1200,
+  //       settings: {
+  //         slidesToShow: 3,
+  //         slidesToScroll: 1,
+  //       },
+  //     },
+  //     {
+  //       breakpoint: 1023,
+  //       settings: {
+  //         slidesToShow: 2,
+  //         slidesToScroll: 1,
+  //       },
+  //     },
+  //     {
+  //       breakpoint: 650,
+  //       settings: {
+  //         slidesToShow: 1,
+  //         slidesToScroll: 1,
+  //       },
+  //     },
+  //   ],
+  // };
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1
+  };
+
+
   const router = useRouter();
+  //console.log(router)
+  const {id}=router.query
+  //
+  console.log(id)
   const { cart, setCart } = useContext(CartContext);
 
   const socialLinks = [...socialData];
@@ -34,11 +89,42 @@ export const ProductDetails = () => {
   const [activeColor, setActiveColor] = useState(2);
   const [nav1, setNav1] = useState();
   const [nav2, setNav2] = useState();
-
+  const [loading,setloading]=useState(true);
   const handleAddToCart = () => {
     const newProduct = { ...product, quantity: quantity };
     setCart([...cart, newProduct]);
   };
+
+  const loginMutation = useMutation({
+    mutationFn: (body) => get_product_details(body),
+    onSuccess: (res) => {
+      //\console.log(res.data)
+      //alert(res.data);
+      console.log(res)
+      setProduct(res.data.message);
+      setloading(false);
+    },
+    onError: (err) => {
+      console.log(err);
+      setloading(false);
+    },
+
+  });
+
+  const getproductdata = () => {
+        let userData=JSON.parse(localStorage.getItem(USER_ID))
+      console.log(userData?.user_id);
+    loginMutation.mutate({
+      user_id:userData?.user_id||0,
+
+      //user_id:2,
+      item_id:parseInt(id)
+    });
+  };
+  useEffect(()=>{
+    getproductdata()
+  },[])
+
 
   if (!product) return <></>;
   return (
@@ -62,14 +148,24 @@ export const ProductDetails = () => {
               </span>
               {product.oldPrice ? (
                 <span className="product-price" style={{ textAlign: "end" }}>
-                  ${product.price}{" "}
-                  <span style={{ marginRight: "0px" }}>
-                    ${product.oldPrice}
+
+                  <span style={{
+                    display:'block',
+                    textDecorationLine:'none'
+                  }}>{product.price}</span>
+                  <span>{"ر.س"}</span>
+                  <span style={{ marginRight: "10px",fontSize:'10px' }}>
+                  {/* <span>ر.س</span> */}
+
+                    <span style={{fontSize:'12px' }}>{product.oldPrice}</span>
+                    <span style={{fontSize:'12px' }}>{"ر.س"}</span>
                   </span>
                 </span>
               ) : (
                 <span className="product-price" style={{ textAlign: "end" }}>
-                  ${product.price}
+                  <span>ر.س</span>
+
+                  <span>{product.price}</span>
                 </span>
               )}
               <p style={{ textAlign: "end" }}>{product.content}</p>
@@ -155,9 +251,10 @@ export const ProductDetails = () => {
             <div className="product-slider">
               <div className="product-slider__main">
                 <Slider
+
                   fade={true}
                   asNavFor={nav2}
-                  arrows={false}
+                  arrows={true}
                   lazyLoad={true}
                   ref={(slider1) => setNav1(slider1)}
                 >
@@ -182,7 +279,8 @@ export const ProductDetails = () => {
               {/* <!-- Product Slide Nav --> */}
               <div className="product-slider__nav">
                 <Slider
-                  arrows={false}
+                  {...settings}
+                  arrows={true}
                   asNavFor={nav1}
                   ref={(slider2) => setNav2(slider2)}
                   slidesToShow={4}
@@ -235,7 +333,7 @@ export const ProductDetails = () => {
                 {tab === 2 && (
                   <div className="tab-cont product-reviews">
                     {/* <!-- Product Reviews --> */}
-                    <Reviews reviews={product.reviews} />
+                    <Reviews reviews={product?.reviews} />
 
                     {/* <!-- Product Review Form --> */}
                     <ReviewFrom />

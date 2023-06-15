@@ -3,11 +3,12 @@ import Link from "next/link";
 export const SingleProduct = ({
   product,
   onAddToWish,
-  onAddToCart,
+  //onAddToCart,
   addedInCart,
-  handleaddfav
+  onAddToFav,
+  onaddTocart
 }) => {
-  const { name, oldPrice, price, image, isSale, isNew, id,addtofav,favorite } = product;
+  const { name, oldPrice, price, image, isSale, isNew, id} = product;
   //console.log(product)
   //console.log(favorite)
   //console.log(product)
@@ -29,16 +30,16 @@ export const SingleProduct = ({
               </a>
             </Link>
             <div className="products-item__hover-options">
-              <button className="addList" onClick={() => onAddToWish(id)}>
+              <button className="addList"
+              onClick={() =>onAddToFav(id)}>
                 <i className="icon-heart"
-                  onClick={()=>handleaddfav(id)}
-                ></i>
 
+                ></i>
               </button>
               <button
                 disabled={addedInCart}
                 className={`addList ${addedInCart ? "added" : ""}`}
-                onClick={() => onAddToCart(id)}
+                onClick={() => onaddTocart(id)}
               >
                 <i className="icon-cart"></i>
               </button>
@@ -51,9 +52,19 @@ export const SingleProduct = ({
               <span className="products-item__name">{name}</span>
             </a>
           </Link>
-          <span className="products-item__cost">
-            <span>{oldPrice && `$${oldPrice}`}</span> ${price}
+          <div style={{
+            display:'flex',
+            alignItems:'center',
+            justifyContent:'center'
+          }}>
+          <span style={{margin:'0px'}} className="products-item__cost">
+          <span style={{margin:'0px'}}>ر.س</span>
+            <span>{oldPrice && `${oldPrice}`}</span>
           </span>
+          <span>ر.س</span>
+          <span>{price}</span>
+          </div>
+
         </div>
       </div>
       {/* <!-- SINGLE PRODUCT ITEM EOF --> */}

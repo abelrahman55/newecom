@@ -3,6 +3,10 @@ import paymentMethodData from "data/footer/payment";
 import socialData from "data/social";
 import Link from "next/link";
 import { NavCol } from "./NavCol/NavCol";
+import { useMutation } from "react-query";
+import { useEffect, useState } from "react";
+import { select_home_fn } from "configs/APIs";
+import { USER_ID } from "configs/AppConfig";
 
 export const Footer = () => {
   const footerLogo = "/assets/img/header-logo.svg";
@@ -10,6 +14,40 @@ export const Footer = () => {
   const footerNav = [...footerNavData];
   const footerSocial = [...socialData];
   const paymentMethods = [...paymentMethodData];
+  const [footerdata, setFooterData] = useState({});
+  const [loading, setLoading] = useState(false);
+  const HomeMutation = useMutation({
+    mutationFn: (body) => select_home_fn(body),
+    onSuccess: (res) => {
+      // alert(JSON.stringify(res.data));
+      if (res.data?.message) {
+        setFooterData(res.data.message)
+      }
+      setLoading(false)
+
+    },
+    onError: (err) => {
+      // alert(err);
+      setLoading(false)
+      // toast(err.message, { type: "error" })
+    },
+  });
+
+
+  const gethomedata = () => {
+    setLoading(true)
+    let userData=JSON.parse(localStorage.getItem(USER_ID))
+
+    HomeMutation.mutate({
+      user_id:userData?.user_id||0,
+    })
+
+  };
+
+  useEffect(() => {
+    gethomedata()
+  }, [])
+
 
   return (
     <>
@@ -21,8 +59,11 @@ export const Footer = () => {
               <span>:تجدنا هنا</span>
               <ul>
                 {footerSocial.map((social, index) => (
-                  <li key={index}>
-                    <a href={social.path}>
+                  <li  key={index}>
+                    <a href={social.icon == 'icon-facebook' ? footerdata?.about_us?.facebook_link :
+                      social.icon == 'icon-twitter' ? footerdata?.about_us?.tweter_link :
+                        social.icon == 'icon-in' ?
+                          footerdata?.about_us?.linkedin_link : footerdata?.about_us?.instegram_link}>
                       <i className={social.icon}></i>
                     </a>
                   </li>
@@ -51,29 +92,34 @@ export const Footer = () => {
           </div>
           <div className="footer-nav">
             {/* Footer Nav */}
-            {footerNav.map((nav, index) => (
-              <NavCol nav={nav} key={index} />
-            ))}
-            <div className="footer-nav__col">
-              <span className="footer-nav__col-title">اتصال</span>
+            <div style={{textAlign:'end'}} className="footer-nav__col">
+              <span style={{textAlign:'end'}} className="footer-nav__col-title">اتصال</span>
               <ul>
-                <li>
-                  <i className="icon-map-pin"></i> 27 Division St, New York, NY
-                  10002, USA
+                <li style={{ color: "#bbbbbb" ,textAlign:'end'}}>
+                  {footerdata?.about_us?.address ?? ''} <i className="icon-map-pin"></i>
                 </li>
                 <li>
-                  <i className="icon-smartphone"></i>
                   <div className="footer-nav__col-phones">
-                    <a href="tel:+13459971345">+1 345 99 71 345</a>
-                    <a href="tel:+13457464975">+1 345 74 64 975</a>
+                    {footerdata?.about_us?.phones?.map((phone, index) => (
+                      <a href={`tel:${phone}`}>{phone}</a>
+
+                    ))}
+
                   </div>
+                  <i className="icon-smartphone"></i>
+
                 </li>
                 <li>
+                  <a href="mailto:info@beshop.com">{footerdata?.about_us?.email_info}</a>
                   <i className="icon-mail"></i>
-                  <a href="mailto:info@beshop.com">info@beshop.com</a>
+
                 </li>
               </ul>
             </div>
+            {footerNav.map((nav, index) => (
+              <NavCol nav={nav} key={index} />
+            ))}
+
           </div>
           <div className="footer-copy">
             <span>&copy;Camp Coding 2023 كل الحقوق محفوظة. بواسطة </span>

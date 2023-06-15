@@ -8,8 +8,8 @@ export const navItem = [
     path: "/contact",
   },
   {
-    name: "الكروت",
-    path: "/cards",
+    name: "البطاقات",
+    path: "/categoryitems/3",
   },
 
   {

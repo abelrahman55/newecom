@@ -1,8 +1,10 @@
 import productData from 'data/product/product';
 import { Card } from './Card/Card';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
+import { get_wishlist } from 'configs/APIs';
+import { USER_ID } from 'configs/AppConfig';
 
 export const Wishlist = () => {
   const wishItems = [...productData].slice(0, 2);
@@ -11,21 +13,25 @@ export const Wishlist = () => {
     const loginMutation = useMutation({
     mutationFn: (body) => get_wishlist(body),
     onSuccess: (res) => {
-      alert(res.data);
+      //alert(res.data);
       setwhitshes(res.data.message);
     },
     onError: (err) => {
-      alert(err);
+      console.log(err);
     },
   });
 
   const whishlist = () => {
+    let userData=JSON.parse(localStorage.getItem(USER_ID))
 
     loginMutation.mutate({
-      user_id,
+      user_id:userData?.user_id,
 
     });
   };
+  useEffect(()=>{
+    whishlist();
+  },[])
   return (
     <>
       {/* <!-- BEGIN WISHLIST --> */}

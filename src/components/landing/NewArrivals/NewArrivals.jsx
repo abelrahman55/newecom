@@ -2,7 +2,7 @@ import { ProductsCarousel } from 'components/Product/Products/ProductsCarousel';
 import { SectionTitle } from 'components/shared/SectionTitle/SectionTitle';
 import productData from 'data/product/product';
 
-export const NewArrivals = () => {
+export const NewArrivals = ({productsdata}) => {
   const newArrival = [...productData].filter(
     (arrival) => arrival.isNew === true
   );
@@ -19,7 +19,7 @@ export const NewArrivals = () => {
 
         <div className='products-items'>
           {/* hir */}
-          {/* <ProductsCarousel products={newArrival} /> */}
+          <ProductsCarousel productsdata={productsdata} />
         </div>
       </section>
       {/* <!-- NEW ARRIVALS EOF --> */}

@@ -1,26 +1,36 @@
 import { SocialLogin } from "components/shared/SocialLogin/SocialLogin";
 import { login_fn } from "configs/APIs";
 import { IS_LOGGED_IN, USER_ID } from "configs/AppConfig";
+// import { redirect } from "next/dist/server/api-utils";
+// import { redirect } from "next/";
 import router from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation } from "react-query";
 
 export const Login = () => {
+  useEffect(()=>{
+    let userData=localStorage.getItem(USER_ID)
+    if(userData){
+       return router.push("/")
+    }
+  },[])
   const [user_email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const loginMutation = useMutation({
     mutationFn: (body) => login_fn(body),
     onSuccess: (res) => {
-      alert(res.data);
+      //alert(res.data);
       if (res.data?.message?.user_id) {
-        localStorage.setItem(USER_ID, res.data?.message?.user_id || 1);
+        console.log(res.data.message);
+        localStorage.setItem(USER_ID, JSON.stringify(res.data?.message));
         localStorage.setItem(IS_LOGGED_IN, true);
         router.push("/");
       }
     },
     onError: (err) => {
-      alert(err);
+      console.log(err);
+      //alert(err);
     },
   });
 

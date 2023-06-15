@@ -1,4 +1,4 @@
-export const BASE_URL = "https://camp-coding.online/";
+export const BASE_URL = "https://roma-cosmetic.ps/api";
 
 export const USER_ID = "USER_ID";
 

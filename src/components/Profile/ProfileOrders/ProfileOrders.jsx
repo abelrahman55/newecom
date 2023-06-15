@@ -1,9 +1,13 @@
 import orderData from "data/orders/orders";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card } from "./Card/Card";
+import { getuserorders } from "configs/APIs";
+import { useMutation } from "react-query";
+import { USER_ID } from "configs/AppConfig";
 
 export const ProfileOrders = () => {
   const [active, setActive] = useState(-1);
+  const [profileorders,setprofileorders]=useState([]);
   const orders = [...orderData];
   const handleCollapse = (indx) => {
     if (active === indx) {
@@ -12,6 +16,42 @@ export const ProfileOrders = () => {
       setActive(indx);
     }
   };
+
+
+
+    const profileMutation = useMutation({
+    mutationFn: (body) => getuserorders(body),
+    onSuccess: (res) => {
+      console.log(res.data)
+      // alert(JSON.stringify(res.data));
+      if (res.data?.message) {
+        setprofileorders(res.data.message)
+      }
+      // setLoading(false)
+
+    },
+    onError: (err) => {
+      // alert(err);
+      setLoading(false)
+      toast(err.message, { type: "error" })
+    },
+  });
+
+
+  const getprofileorder = () => {
+    //setLoading(true)
+    let userData=JSON.parse(localStorage.getItem(USER_ID))
+
+    profileMutation.mutate({
+      user_id:userData?.user_id||0,
+    })
+
+  };
+
+  useEffect(() => {
+    getprofileorder()
+  }, [])
+
   return (
     <>
       <div dir="rtl" className="profile-orders">
@@ -29,7 +69,7 @@ export const ProfileOrders = () => {
             الحاله
           </div>
         </div>
-        {orders.map((order, index) => (
+        {profileorders.map((order, index) => (
           <Card
             key={index}
             index={index}

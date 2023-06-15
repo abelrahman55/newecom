@@ -7,7 +7,8 @@ import {
 import { Card } from './Card/Card';
 import TestimonialData from 'data/testimonial/testimonial';
 
-export const Testimonials = () => {
+export const Testimonials = ({reviews}) => {
+  console.log(reviews)
   const testimonials = [...TestimonialData];
 
   const settings = {
@@ -27,10 +28,10 @@ export const Testimonials = () => {
       {/* <!-- BEGIN TESTIMONIALS --> */}
       <section className='testimonials'>
         <div className='wrapper'>
-          <SectionTitle subTitle='They Stay' title='testimonials' />
+          <SectionTitle subTitle='' title='الأراء' />
           <div className='testimonials-slider'>
             <Slider {...settings}>
-              {testimonials.map((testimonial) => (
+              {reviews.map((testimonial) => (
                 <Card key={testimonial.id} testimonial={testimonial} />
               ))}
             </Slider>

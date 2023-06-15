@@ -14,7 +14,6 @@ const breadcrumbsData = [
 const CategoriesPage = () => {
   return (
     <PublicLayout breadcrumb={breadcrumbsData} breadcrumbTitle='التصنيفات'>
-
       <Category />
     </PublicLayout>
   );

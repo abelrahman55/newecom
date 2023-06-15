@@ -109,9 +109,9 @@ export const Trending = ({productsdata}) => {
       <section className="trending">
         <div className="trending-content">
           <SectionTitle
-            subTitle="مستحضرات التجميل"
+            // subTitle="مستحضرات التجميل"
             title="المنتجات الرائجة"
-            body="غذي بشرتك بمنتجات التجميل الخالية من السموم. مع العروض التي لا يمكنك رفضها."
+            body="باقة من اجود انواع العطور التي توفر لك اطلاله فريده من نوعها"
           />
           <div className="tab-wrap trending-tabs">
             {/* <ul className="nav-tab-list tabs">

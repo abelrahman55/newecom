@@ -15,7 +15,7 @@ export const Cart = () => {
   );
 
   const handleProductQuantity = (change, quantity, id) => {
-    console.log(change, quantity, id);
+    //console.log(change, quantity, id);
     if (change === "increment") {
       cart.find((item) => item.id === id).quantity = quantity + 1;
       setCount(count + 1);
@@ -39,7 +39,7 @@ export const Cart = () => {
             <div className="cart-table__box">
               <div className="cart-table__row cart-table__row-head">
                 <div className="cart-table__col">المنتج</div>
-                
+
                 <div className="cart-table__col">السعر</div>
                 <div className="cart-table__col">الكمية</div>
                 <div className="cart-table__col">الاجمالي</div>

@@ -1,9 +1,11 @@
 import { SocialLogin } from "components/shared/SocialLogin/SocialLogin";
 import { signup_fn } from "configs/APIs";
+import { USER_ID } from "configs/AppConfig";
 import router from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation } from "react-query";
-
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 export const Registration = () => {
   const [user_email, setEmail] = useState("");
   const [first_name, setFirst_name] = useState("");
@@ -15,14 +17,19 @@ export const Registration = () => {
   const signupMutation = useMutation({
     mutationFn: (body) => signup_fn(body),
     onSuccess: (res) => {
-      console.log(res.data);
+      //console.log(res.data);
       router.push("/login");
     },
     onError: (err) => {
       console.log(err);
     },
   });
-
+  useEffect(()=>{
+    let userData=localStorage.getItem(USER_ID)
+    if(userData){
+      return router.push("/")
+    }
+  },[])
   const doSignup = (event) => {
     event.preventDefault();
     if (password === password_confirmation) {
@@ -33,7 +40,7 @@ export const Registration = () => {
         password,
       });
     } else {
-      alert("كلمة السر غير متطابقة");
+      toast.warn("كلمة السر غير متطابقة");
     }
   };
   return (
@@ -150,6 +157,7 @@ export const Registration = () => {
           alt=""
         />
       </div>
+      <ToastContainer/>
       {/* <!-- REGISTRATION EOF   -->  */}
     </>
   );

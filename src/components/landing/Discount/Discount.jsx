@@ -6,7 +6,7 @@ export const Discount = () => {
       {/* <!-- BEGIN DISCOUNT --> */}
       <div
         className='discount js-img'
-        style={{ backgroundImage: `url('/assets/img/discount-bg.jpg')` }}
+        style={{ backgroundImage: `url('/assets/img/discount-bg4.jpg')` }}
       >
         <div className='wrapper'>
           <div className='discount-info'>
@@ -15,7 +15,7 @@ export const Discount = () => {
                <span>50%</span>
             </span>
             <p>
-            أحدث عطور برفيوم بالاس
+            أحدث عطور Roma Shop
             </p>
 
             <Link href='/shop'>

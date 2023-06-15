@@ -10,28 +10,28 @@ export const Profile = () => {
       <div className='profile'>
         <div className='wrapper'>
           <div className='profile-content'>
-            
+
             <div className='profile-main'>
               <div className='tab-wrap'>
                 <ul className='nav-tab-list tabs'>
-                  <li
+                  {/* <li
                     onClick={() => setActiveTab('myInfo')}
                     className={activeTab === 'myInfo' ? 'active' : ''}
                   >
                     معلوماتي
-                  </li>
+                  </li> */}
                   <li
                     onClick={() => setActiveTab('orders')}
                     className={activeTab === 'orders' ? 'active' : ''}
                   >
                     طلباتي
                   </li>
-                  <li
+                  {/* <li
                     onClick={() => setActiveTab('wishList')}
                     className={activeTab === 'wishList' ? 'active' : ''}
                   >
                     المفضلة
-                  </li>
+                  </li> */}
                 </ul>
 
                 <div className='box-tab-cont'>

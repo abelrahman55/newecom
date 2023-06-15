@@ -1,5 +1,6 @@
 export const Card = ({ order, index, onCollapse, active }) => {
   const { date, deliveryAddress, amount, status, orderItems } = order;
+  console.log(order)
 
   return (
     <>
@@ -14,24 +15,45 @@ export const Card = ({ order, index, onCollapse, active }) => {
           </div>
           <div className="profile-orders__col">
             <span className="profile-orders__col-mob">عنوان التسليم</span>
-            <span className="profile-orders__item-addr">{deliveryAddress}</span>
+            <span className="profile-orders__item-addr"
+            style={{
+
+            }}
+            >{deliveryAddress}</span>
           </div>
           <div className="profile-orders__col">
             <span className="profile-orders__col-mob">الكمية</span>
-            <span className="profile-orders__item-price">${amount}</span>
+            <span className="profile-orders__item-price">
+
+            <span>{amount}</span>
+            <span> ر.س </span>
+
+            </span>
           </div>
           <div className="profile-orders__col">
             <span className="profile-orders__col-mob">الحالة</span>
             <span
               className={`profile-orders__col-${
-                status.delivered ? "تم التسليم" : "في الطريق"
+                ""
+                // status=="delivered" ? "تم التسليم" : "في الطريق"
               }`}
+            style={{
+              color: status=="onWay"
+              ? "#F1931C"
+              : status=="delivered"
+              ? "#12d012"
+              : status=="pending"
+              ? "#5F1CF1"
+              : "#f00"
+            }}
             >
-              {status.onWay
+              {status=="onWay"
                 ? "في الطريق"
-                : status.delivered
+                : status=="delivered"
                 ? "تم التسليم"
-                : null}
+                : status=="pending"
+                ? "قيد المراجعه"
+                : "تم الغاء الطلب"}
             </span>
             <span
               onClick={() => onCollapse(index)}
@@ -43,8 +65,29 @@ export const Card = ({ order, index, onCollapse, active }) => {
           <ul>
             {orderItems.map((item, index) => (
               <li key={index}>
-                {item.name}
-                <span>${item.price}</span>
+                <span>
+                {index+1 +" - "+ item.name}
+                <span style={{
+                  color:"#F1931C",
+                  fontWeight:'bold'
+                }}> × {item.item_count}</span>
+                </span>
+                <span>
+
+                <span>{item.single_price}</span>
+
+                {/* <span> ر.س </span> */}
+                 <span style={{
+                  color:"#F1931C",
+                  fontWeight:'bold'
+                }}> × {item.item_count}</span> = <span style={{fontWeight:'bold'}}>{item.single_price*item.item_count}</span>
+<span style={{
+                  color:"#F1931C",
+                  fontWeight:'bold'
+                }}> ر.س </span>
+
+  </span>
+
               </li>
             ))}
             <li>

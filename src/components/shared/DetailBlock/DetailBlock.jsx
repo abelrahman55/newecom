@@ -1,4 +1,5 @@
-export const DetailBlock = ({ detailBlocks }) => {
+export const DetailBlock = ({ detailBlocks,phone }) => {
+  console.log(phone)
   return (
     <>
       {/* <!-- BEGIN DETAIL MAIN BLOCK --> */}
@@ -16,7 +17,17 @@ export const DetailBlock = ({ detailBlocks }) => {
               </div>
               <div className='detail-block__item-info'>
                 <h6>{block.step}</h6>
-                {block.title}
+                {
+                  block.step!=="تواصل مباشر"?(
+                    <>
+                      {block.title}
+                    </>
+                  ):(
+                    <>
+                      {phone}
+                    </>
+                  )
+                }
               </div>
             </div>
           ))}

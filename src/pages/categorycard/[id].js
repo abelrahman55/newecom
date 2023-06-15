@@ -6,15 +6,14 @@ const breadcrumbsData = [
     label: 'الرئيسية',
     path: '/',
   },
-  {
-    label: 'التصنيفات',
-    path: '/categories',
-  },
+  // {
+  //   label: 'التصنيفات',
+  //   path: '/categories',
+  // },
 ];
 const CategoriesPage = () => {
   return (
     <PublicLayout breadcrumb={breadcrumbsData} breadcrumbTitle='التصنيفات'>
-
       <Category />
     </PublicLayout>
   );

@@ -1,14 +1,27 @@
 import useWindowSize from 'components/utils/windowSize/windowSize';
+import { USER_ID } from 'configs/AppConfig';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { CartContext } from 'pages/_app';
+import { useContext, useEffect, useState } from 'react';
 
 export const Nav = ({ navItem }) => {
   const router = useRouter();
   const [sub, setSub] = useState(false);
   const [height, width] = useWindowSize();
-
+  //const [alldata,setalldata]=useState({});
+  let mydata;
   useEffect(() => {
+    let userData=JSON.parse(localStorage.getItem(USER_ID))
+    mydata=JSON.parse(localStorage.getItem(USER_ID));
+    //setalldata(JSON.parse(localStorage.getItem(USER_ID)))
+  }, []);
+  const { alldata } = useContext(CartContext);
+
+  // console.log(mydata);
+  // console.log(alldata);
+  useEffect(() => {
+
     if (height > 768) {
       setSub(false);
     }

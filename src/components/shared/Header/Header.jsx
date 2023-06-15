@@ -1,13 +1,14 @@
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import useWindowSize from "components/utils/windowSize/windowSize";
 import { header, navItem } from "data/data.header";
-import Link from "next/link";
+import Link from 'next/link';
 import { CartContext } from "pages/_app";
 import { useContext, useEffect, useState } from "react";
 import { Nav } from "./Nav/Nav";
 
 export const Header = () => {
   const { cart } = useContext(CartContext);
+  const { alldata } = useContext(CartContext);
   const [promo, setPromo] = useState(true);
   const [fixedNav, setFixedNav] = useState(false);
   const [openMenu, setOpenMenu] = useState(false);
@@ -41,13 +42,20 @@ export const Header = () => {
       enableBodyScroll(document);
     }
   }, [openMenu, height]);
+
+
+
+
+  // console.log(mydata);
+  console.log(alldata);
+
   return (
     <>
       {/* <!-- BEGIN HEADER --> */}
       <header className="header">
         {promo && (
           <div className="header-top">
-            <span>30% OFF ON ALL PRODUCTS ENTER CODE: beshop2020</span>
+            <span>30% OFF ON ALL PRODUCTS ENTER CODE: RomaShop2020</span>
             <i
               onClick={() => setPromo(false)}
               className="header-top-close js-header-top-close icon-close"
@@ -58,7 +66,10 @@ export const Header = () => {
           <div style={{ right: openMenu ? 0 : -360 }} className="header-box">
             {/* header options */}
             <ul className="header-options">
-              <li>
+              {
+                alldata?(
+                  <>
+                    <li>
                 <Link href="/cart">
                   <a>
                     <i className="icon-cart"></i>
@@ -81,6 +92,18 @@ export const Header = () => {
                 </Link>
               </li>
 
+                  </>
+                ):(
+                  <div style={{
+                    display:'flex',
+                    alignItems:'center',
+                    gap:'6px'
+                  }}>
+                    <Link href={"/login"}>Log In</Link>
+                    <Link href={"/registration"}>Sign Up</Link>
+                  </div>
+                )
+              }
               <li>
                 <Link href="/faq">
                   <a>

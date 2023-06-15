@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import Dropdown from "react-dropdown";
 import { AsideItem } from "../shared/AsideItem/AsideItem";
 import { useMutation, useQuery } from "react-query";
-import { get_categories_fn, select_products_fn } from "configs/APIs";
+import { get_categories_fn, select_products_fn, selectcards } from "configs/APIs";
 
 // React Range
 const { createSliderWithTooltip } = Slider;
@@ -17,49 +17,58 @@ const options = [
   { value: "minToHigh", label: "من الرخيص إلى باهظ الثمن" },
 ];
 export const Cards = () => {
-  const allProducts = [...productData];
+  const [products, setProducts] = useState([]);
 
+  const [cartproducts,setcartproducts]=useState([]);
   const [productOrder, setProductOrder] = useState(
-    allProducts.sort((a, b) => (a.price < b.price ? 1 : -1))
+    products.sort((a, b) => (a.price < b.price ? 1 : -1))
   );
 
-  const [products, setProducts] = useState([]);
+  const [productsorigin, setoriginproducts] = useState([]);
   const [filter, setFilter] = useState({ isNew: false, isSale: true });
+  const [searchTxt, setSearchTxt] = useState('');
+  const [categoryid,setcategoryid]=useState(null);
 
-  useEffect(() => {
-    setProducts(productOrder);
-  }, [productOrder]);
+
+  // useEffect(() => {
+  //   setProducts(productOrder);
+  // }, [productOrder]);
 
   useEffect(() => {
     if (filter.isNew && filter.isSale) {
-      const newPro = productOrder.filter(
+      const newPro = products.filter(
         (pd) => pd.isNew === true && pd.isSale === true
       );
       setProducts(newPro);
     } else if (filter.isNew && !filter.isSale) {
-      const newPro = productOrder.filter((pd) => pd.isNew === true);
+      const newPro = products.filter((pd) => pd.isNew === true);
       setProducts(newPro);
     } else if (filter.isSale && !filter.isNew) {
-      const newPro = productOrder.filter((pd) => pd.isSale === true);
+      const newPro = products.filter((pd) => pd.isSale === true);
       setProducts(newPro);
     } else {
-      setProducts([...productOrder]);
+      //setProducts([...productOrder]);
     }
-  }, [filter, productOrder]);
-  const recentlyViewed = [...productData].slice(0, 3);
-  const todaysTop = [...productData].slice(3, 6);
-  const paginate = usePagination(products, 9);
+  }, [filter, products]);
+  const recentlyViewed = [...products].slice(0, 3);
+  const todaysTop = [...products].slice(3, 6);
+  const paginate = usePagination(products, 6);
 
   const handleSort = (value) => {
     if (value === "highToMin") {
-      const newOrder = allProducts.sort((a, b) => (a.price < b.price ? 1 : -1));
+      const newOrder = products.sort((a, b) => (a.price < b.price ? 1 : -1));
       setProductOrder(newOrder);
+      setoriginproducts(newOrder);
+      setProducts(newOrder)
     }
     if (value === "minToHigh") {
-      const newOrder = allProducts.sort((a, b) => (a.price > b.price ? 1 : -1));
+      const newOrder = products.sort((a, b) => (a.price > b.price ? 1 : -1));
       setProductOrder(newOrder);
+      setoriginproducts(newOrder);
+      setProducts(newOrder)
     }
   };
+
 
   // const { data: categories } = useQuery({
   //   queryFn: () => get_categories_fn(),
@@ -75,8 +84,9 @@ export const Cards = () => {
   // const [products, setProducts] = useState([]);
 
   const selectProducts = useMutation({
-    mutationFn: (body) => select_products_fn(body),
+    mutationFn: (body) => selectcards(body),
     onSuccess: (res) => {
+      console.log(res.data)
       setProducts(res.data?.message);
     },
     onError: (err) => {
@@ -84,12 +94,37 @@ export const Cards = () => {
     },
   });
   useEffect(() => {
+    let userData=JSON.parse(localStorage.getItem(USER_ID))
+
     selectProducts.mutate({
-      user_id: 1,
+      user_id: userData?.user_id||0,
       start: 0,
-      category_id: "all",
     });
   }, []);
+
+  // const loginMutation = useMutation({
+  //   mutationFn: (body) => select_products_fn(body),
+  //   onSuccess: (res) => {
+  //     //console.log(res.data)
+  //     //alert(res.data);
+  //     setcartproducts(res.data.message);
+
+  //   },
+  //   onError: (err) => {
+  //     alert(err);
+  //   },
+  // });
+
+  // const getcarddata = () => {
+
+  //   loginMutation.mutate({
+  //     user_id:1,
+  //   });
+  // };
+  // useEffect(()=>{
+  //   getcarddata()
+  // },[])
+
 
   return (
     <div>
@@ -98,9 +133,11 @@ export const Cards = () => {
         <div className="wrapper">
           <div className="shop-content">
             {/* <!-- Shop Main --> */}
-            <div className="shop-main">
+            <div className="shop-main" style={{
+              width:'100%'
+            }}>
               <div className="shop-main__filter">
-                <div className="shop-main__checkboxes">
+                {/* <div className="shop-main__checkboxes">
                   <label className="checkbox-box">
                     <input
                       checked={filter.isSale}
@@ -123,7 +160,7 @@ export const Cards = () => {
                     <span className="checkmark"></span>
                     جديد
                   </label>
-                </div>
+                </div> */}
                 <div className="shop-main__select">
                   <Dropdown
                     options={options}
@@ -133,8 +170,10 @@ export const Cards = () => {
                   />
                 </div>
               </div>
-              <div className="top-categories__items">
-                <Products products={paginate?.currentData()} />
+              <div style={{
+                width:'100%'
+              }} className="top-categories__items">
+                <Products products={ paginate?.currentData()} />
               </div>
 
               {/* <!-- PAGINATE LIST --> */}

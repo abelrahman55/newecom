@@ -1,8 +1,8 @@
-# Beshop Next App
+# RomaShop Next App
 
 ## Preview
 
-Preview the example live on [Beshop](https://beshop-front.vercel.app/):
+Preview the example live on [RomaShop](https://RomaShop-front.vercel.app/):
 
 ```
 Run production build with:

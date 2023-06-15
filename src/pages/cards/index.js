@@ -8,13 +8,13 @@ const breadcrumbsData = [
     path: "/",
   },
   {
-    label: "الكروت",
+    label: "البطاقات",
     path: "/cards",
   },
 ];
 const ShopPage = () => {
   return (
-    <PublicLayout breadcrumb={breadcrumbsData} breadcrumbTitle="الكروت">
+    <PublicLayout breadcrumb={breadcrumbsData} breadcrumbTitle="البطاقات">
       <Cards />
       <Subscribe />
     </PublicLayout>

@@ -10,7 +10,7 @@ export const Category = () => {
   const { data } = useQuery({
     queryFn: () => get_categories_fn(),
     onSuccess: (res) => {
-      console.log(res.data);
+      //console.log(res.data);
       setCategories(res.data?.message);
     },
     onError: (err) => {

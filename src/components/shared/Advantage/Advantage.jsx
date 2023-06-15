@@ -1,7 +1,7 @@
 import { Card } from './Card/Card';
 import advantagesData from 'data/advantage/advantage';
 
-export const Advantage = () => {
+export const Advantage = ({aboutdata}) => {
   const advantages = [...advantagesData];
   return (
     <>
